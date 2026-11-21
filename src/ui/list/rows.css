@@ -1,0 +1,151 @@
+/* Card and row styles shared by the active list and the bought list. */
+.card {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--sh), inset 0 0 0 1px var(--line);
+}
+.card:empty {
+  display: none;
+}
+.card > .row:first-child {
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+}
+.card > .row:last-child {
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 14px 0 4px;
+  background: var(--card);
+}
+.row + .row {
+  box-shadow: inset 0 1px 0 var(--line);
+}
+
+.ck {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+.o {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--c) 70%, var(--mut));
+  display: grid;
+  place-items: center;
+  transition: background 0.25s, border-color 0.25s, transform 0.25s var(--ease);
+}
+.o svg,
+.ck2 svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: var(--bink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.o path {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  transition: stroke-dashoffset 0.3s 0.08s var(--ease);
+}
+.row.checked .o {
+  background: var(--brand);
+  border-color: var(--brand);
+  animation: pop 0.42s var(--ease);
+}
+.row.checked .o path {
+  stroke-dashoffset: 0;
+}
+
+.nm {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 8px 6px 8px 2px;
+  background: none;
+  border: 0;
+  text-align: left;
+  font-size: 17px;
+  font-weight: 500;
+}
+.t {
+  background: linear-gradient(currentColor, currentColor) no-repeat 0 58% / 0% 1.5px;
+  transition: background-size 0.4s var(--ease), color 0.3s;
+  overflow-wrap: anywhere;
+}
+.row.checked .t,
+.row.bought .t {
+  background-size: 100% 1.5px;
+  color: var(--mut);
+}
+.q {
+  flex: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--mut);
+  background: var(--soft);
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.ck2 {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--mut) 45%, transparent);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+/* Swipe to delete: the row slides left, pulling a red "Kustuta" panel in from its right edge. */
+.row {
+  touch-action: pan-y;
+}
+.card:has(> .row.swiping) {
+  overflow: hidden;
+}
+.row.swiping {
+  transform: translateX(var(--swipe, 0px));
+}
+.row.swiping::after {
+  content: 'Kustuta';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  background: var(--acc);
+  color: var(--bink);
+  font-weight: 700;
+  font-size: 15px;
+}
+.row.swipe-snapping {
+  transition: transform 0.12s var(--ease);
+}
+.row.swipe-settling {
+  transition: transform 0.2s var(--ease);
+}

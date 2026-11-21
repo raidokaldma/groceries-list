@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="et">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content" />
+    <title>Poenimekiri</title>
+    <meta name="theme-color" content="#f3f4f0" />
+    <script>
+      // Apply the saved theme before the first paint; the app script starts too late and the page would flash the system theme.
+      // The colours are the page backgrounds from app.css; the app keeps the status bar colour updated after this.
+      try {
+        const theme = JSON.parse(localStorage.getItem('groceries-list.preferences') ?? '{}').theme;
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+        const dark = theme === 'dark' || (theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+        if (dark) document.querySelector('meta[name="theme-color"]').content = '#0f1210';
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

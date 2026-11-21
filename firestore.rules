@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // No sign-in yet: anyone with the project config can read and write the list.
+    match /{collection}/{document} {
+      allow read, write: if collection in ['items', 'history', 'settings'];
+    }
+  }
+}

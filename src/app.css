@@ -1,0 +1,85 @@
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#f3f4f0, #0f1210);
+  --card: light-dark(#fff, #181c19);
+  --ink: light-dark(#151a16, #edf1ec);
+  --mut: light-dark(#68706a, #98a29a);
+  --line: light-dark(#e3e6df, #272c28);
+  --brand: light-dark(#1d4d33, #86d0a3);
+  --bink: light-dark(#fff, #0b1a11);
+  --acc: light-dark(#d9472f, #ff7a62);
+  --soft: light-dark(#ecf0ea, #1f2621);
+  --sh: light-dark(0 1px 2px rgba(20, 35, 25, 0.06), 0 1px 2px rgba(0, 0, 0, 0.5));
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --font: 'Manrope Variable', system-ui, sans-serif;
+  /* set from script: the visible area (smaller on iOS while the keyboard is open), header and input dock heights */
+  --visible-height: 100dvh;
+  --visible-top: 0px;
+  --headh: 72px;
+  --barh: 130px;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  min-width: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.45 var(--font);
+  touch-action: manipulation;
+}
+
+body.dragging,
+body.dragging * {
+  cursor: grabbing !important;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+@keyframes pop {
+  40% {
+    transform: scale(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
