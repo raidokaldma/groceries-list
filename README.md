@@ -16,7 +16,7 @@ Grocery list PWA: Svelte 5 + Vite, Firestore with live updates and offline persi
 ## Notes
 
 - Data: `items`, `history` (per-product usage for suggestions and department), `settings/departmentOrder`.
-- Grouping and the expanded "Ostetud" section are per-device (localStorage).
+- Grouping (off, sorted by department, grouped with headers) and the expanded "Ostetud" section are per-device (localStorage).
 - Offline: Firestore's IndexedDB cache serves the list and queues writes; the service worker precaches the app.
 - Updates: the service worker checks hourly and when the app regains focus; a new version activates and reloads the page.
 - PWA icons are generated from `public/icon.svg` at build time.

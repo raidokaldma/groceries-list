@@ -20,14 +20,14 @@
   import EmptyState from './EmptyState.svelte';
 
   let listElement: HTMLElement;
-  /** Lags behind preferences.grouped while the view-switch animation runs. */
-  let displayedGrouped = $state(preferences.grouped);
+  /** Lags behind preferences.grouping while the view-switch animation runs. */
+  let displayedGrouping = $state(preferences.grouping);
   let switchingView = false;
 
   const held = new HeldArrangement();
   const activeItems = $derived(activeItemsInOrder());
   const itemsById = $derived(new Map(activeItems.map((item) => [item.id, item])));
-  const arrangement = $derived(held.sections ?? arrange(activeItems, displayedGrouped, list.departmentOrder));
+  const arrangement = $derived(held.sections ?? arrange(activeItems, displayedGrouping, list.departmentOrder));
   const sections = $derived(
     arrangement.map((section) => ({
       ...section,
@@ -51,23 +51,23 @@
   });
 
   $effect(() => {
-    const wanted = preferences.grouped;
+    const wanted = preferences.grouping;
     untrack(() => {
-      if (wanted !== displayedGrouped && !switchingView) switchView();
+      if (wanted !== displayedGrouping && !switchingView) switchView();
     });
   });
 
   async function switchView() {
     switchingView = true;
     const showWantedView = async () => {
-      displayedGrouped = preferences.grouped;
+      displayedGrouping = preferences.grouping;
       await tick();
     };
     if (activeItems.length) await fadeSwap(listElement, showWantedView);
     else await showWantedView();
     switchingView = false;
     // The user may have toggled again while the animation ran.
-    if (preferences.grouped !== displayedGrouped) switchView();
+    if (preferences.grouping !== displayedGrouping) switchView();
   }
 </script>
 
@@ -84,7 +84,7 @@
 <!-- The row <li> is repeated below because animate: only works on an element directly inside a keyed each block. -->
 <main bind:this={listElement} class:folded={sectionDrag.folded} use:swipeToDelete={{ onDelete: deleteWithUndo }}>
   {#if list.loadStatus === 'ready'}
-    {#if displayedGrouped}
+    {#if displayedGrouping === 'grouped'}
       {#each sections as section (section.id)}
         {@const department = getDepartment(section.kind === 'department' ? section.id : OTHER_DEPARTMENT)}
         <section

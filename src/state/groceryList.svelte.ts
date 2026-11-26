@@ -13,12 +13,19 @@ export function findItem(id: string): Item | undefined {
   return list.items.find((item) => item.id === id);
 }
 
-function sortValue(item: Item): number {
-  return item.order ?? item.addedAt;
+/**
+ * Items never dragged come first, newest first. Dragging gives every active item a manual `order`,
+ * so items added after that still appear on top.
+ */
+function compareActive(a: Item, b: Item): number {
+  if (a.order === undefined && b.order === undefined) return b.addedAt - a.addedAt;
+  if (a.order === undefined) return -1;
+  if (b.order === undefined) return 1;
+  return a.order - b.order;
 }
 
 export function activeItemsInOrder(): Item[] {
-  return list.items.filter((item) => item.status === 'active').sort((a, b) => sortValue(a) - sortValue(b));
+  return list.items.filter((item) => item.status === 'active').sort(compareActive);
 }
 
 export function doneItemsNewestFirst(): Item[] {

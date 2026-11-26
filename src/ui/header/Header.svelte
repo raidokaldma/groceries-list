@@ -1,7 +1,7 @@
 <script lang="ts">
   import { list } from '../../state/groceryList.svelte';
   import { checkedItems } from '../../state/checking';
-  import { preferences, savePreferences } from '../../state/preferences.svelte';
+  import { preferences, savePreferences, type Grouping } from '../../state/preferences.svelte';
   import { isDark } from '../theme/theme.svelte';
   import { exposeHeight } from '../shared/viewport';
 
@@ -17,8 +17,11 @@
     savePreferences();
   }
 
-  function toggleGrouping() {
-    preferences.grouped = !preferences.grouped;
+  const NEXT_GROUPING: Record<Grouping, Grouping> = { none: 'sorted', sorted: 'grouped', grouped: 'none' };
+  const GROUPING_PRESSED: Record<Grouping, 'false' | 'mixed' | 'true'> = { none: 'false', sorted: 'mixed', grouped: 'true' };
+
+  function cycleGrouping() {
+    preferences.grouping = NEXT_GROUPING[preferences.grouping];
     savePreferences();
   }
 </script>
@@ -38,7 +41,7 @@
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
       {/if}
     </button>
-    <button class="pill" onclick={toggleGrouping} aria-pressed={preferences.grouped} aria-label="Rühmita osakonniti">
+    <button class="pill" onclick={cycleGrouping} aria-pressed={GROUPING_PRESSED[preferences.grouping]} aria-label="Rühmita osakonniti">
       <svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h16M4 18h7" /><circle cx="18" cy="6" r="1.6" /><circle cx="15" cy="18" r="1.6" /></svg>
       <span class="label">Grupeeri</span>
     </button>
@@ -102,6 +105,11 @@
     background: var(--brand);
     color: var(--bink);
     border-color: transparent;
+  }
+  .pill[aria-pressed='mixed'] {
+    background: color-mix(in srgb, var(--brand) 16%, var(--card));
+    color: var(--brand);
+    border-color: color-mix(in srgb, var(--brand) 40%, transparent);
   }
   .pill svg {
     width: 20px;

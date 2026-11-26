@@ -1,6 +1,9 @@
+/** "sorted" orders the list by department without showing department headers. */
+export type Grouping = 'none' | 'sorted' | 'grouped';
+
 /** View settings that belong to this device, not to the shared list. */
 interface Preferences {
-  grouped: boolean;
+  grouping: Grouping;
   doneExpanded: boolean;
   /** "system" follows the device setting until the user picks a theme. */
   theme: 'system' | 'light' | 'dark';
@@ -9,9 +12,12 @@ interface Preferences {
 const STORAGE_KEY = 'groceries-list.preferences';
 
 function load(): Preferences {
-  const defaults: Preferences = { grouped: false, doneExpanded: false, theme: 'system' };
+  const defaults: Preferences = { grouping: 'none', doneExpanded: false, theme: 'system' };
   try {
-    return { ...defaults, ...JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') };
+    const { grouped, ...stored } = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}');
+    // Older versions stored grouping as a boolean.
+    const migrated = grouped === true ? { grouping: 'grouped' } : {};
+    return { ...defaults, ...migrated, ...stored };
   } catch {
     return defaults;
   }

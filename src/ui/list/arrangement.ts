@@ -1,10 +1,17 @@
 import type { DepartmentId, Item } from '../../shared/types';
+import type { Grouping } from '../../state/preferences.svelte';
 
 /** One card on screen: a department in grouped view, or the whole list in flat view. */
 export type ListSection = { kind: 'department'; id: DepartmentId; itemIds: string[] } | { kind: 'flat'; id: 'all'; itemIds: string[] };
 
-export function arrange(items: Item[], grouped: boolean, departmentOrder: DepartmentId[]): ListSection[] {
-  if (!grouped) return [{ kind: 'flat', id: 'all', itemIds: items.map((item) => item.id) }];
+export function arrange(items: Item[], grouping: Grouping, departmentOrder: DepartmentId[]): ListSection[] {
+  if (grouping === 'none') return [{ kind: 'flat', id: 'all', itemIds: items.map((item) => item.id) }];
+  const departments = departmentSections(items, departmentOrder);
+  if (grouping === 'sorted') return [{ kind: 'flat', id: 'all', itemIds: departments.flatMap((section) => section.itemIds) }];
+  return departments;
+}
+
+function departmentSections(items: Item[], departmentOrder: DepartmentId[]): ListSection[] {
   return departmentOrder
     .map((department): ListSection => ({
       kind: 'department',
